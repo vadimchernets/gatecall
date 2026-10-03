@@ -1,5 +1,7 @@
 # gatecall
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23116724.svg)](https://doi.org/10.5281/zenodo.23116724)
+
 What may leave the company, and where it may go. A [Claude Code](https://claude.com/claude-code) plugin of
 Poly A1 for a company's people and the one who sets AI up. Repository:
 [github.com/vadimchernets/gatecall](https://github.com/vadimchernets/gatecall).
