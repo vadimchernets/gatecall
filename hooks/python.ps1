@@ -127,6 +127,6 @@ foreach ($f in $found) {
 }
 
 if ($mode -eq 'say') {
-  Write-Output "$plugin is paused: this computer has no working Python 3 yet, so $plugin does nothing for now. Tell the person in one line and do step 0 first (in the Poly A1 folder it is the first step of START-HERE): Mac - xcode-select --install, then press Install in Apple's window and wait 5-10 minutes; Windows - winget install -e --id Python.Python.3.12 --scope user; Linux - sudo apt-get install -y python3. No restart of Claude Code is needed after that."
+  Write-Output "$plugin is paused: it starts working the moment this computer has Python 3. Tell the person in one line and do step 0 first (in the Poly A1 folder it is the first step of START-HERE): Mac - xcode-select --install, then press Install in Apple's window and wait 5-10 minutes; Windows - winget install -e --id Python.Python.3.12 --scope user; Linux - sudo apt-get install -y python3. No restart of Claude Code is needed after that."
 }
 exit 0

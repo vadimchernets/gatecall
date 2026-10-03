@@ -8,8 +8,8 @@ Poly A1 for a company's people and the one who sets AI up. Repository:
 
 **gatecall gives every kind of data a route.** Red folders are read only by a model on this computer; the
 company's work goes to the company's own accounts; and a key, a card number, an IBAN, an ID number or a list of
-people's addresses never leaves in a message by accident. It stops and explains — it sends nothing, buys nothing
-and never asks for a card.
+people's addresses never leaves in a message by accident. It stops, explains and shows the way forward; it sends
+nothing and buys nothing.
 
 ## What it does
 

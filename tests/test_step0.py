@@ -166,9 +166,12 @@ class StepZero(unittest.TestCase):
     def test_the_launcher_is_safecalls_own(self):
         """One launcher for every Poly A1 plugin: when safecall's copy is on this computer, the two are the same
         file (a fix made there must not be missed here)."""
-        theirs = os.path.join(os.path.expanduser("~"), "Developer", "safecall", "hooks")
+        # safecall of the same build (a checkout beside this plugin) first, else the one in ~/Developer
+        theirs = os.path.join(os.path.dirname(ROOT), "safecall", "hooks")
         if not os.path.isdir(theirs):
-            self.skipTest("no ~/Developer/safecall on this computer")
+            theirs = os.path.join(os.path.expanduser("~"), "Developer", "safecall", "hooks")
+        if not os.path.isdir(theirs):
+            self.skipTest("no safecall beside this plugin or in ~/Developer on this computer")
 
         def lines(path):
             with open(path, "rb") as fh:

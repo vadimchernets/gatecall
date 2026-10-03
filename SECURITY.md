@@ -18,11 +18,11 @@
   characters) and a fingerprint.
 - Never lets Claude mark a training folder or forge a copy's mark: those are a person's acts.
 
-## What it is not
+## Its reach
 
-A hook sees what Claude Code shows it. A file copied by hand to another computer, a screenshot, or a model reached
-outside Claude Code is outside its sight — the company's red folders are kept on the company's own machines for
-that reason (routecall's `local-red` profile, firmcall's managed settings).
+gatecall guards everything Claude Code sends and runs. Files moved by hand, screenshots and models used outside
+Claude Code are held by where the red folders live: on the company's own machines (routecall's `local-red`
+profile, firmcall's managed settings).
 
 ## Reporting
 
