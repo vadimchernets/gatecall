@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2 — 2026-10-03
+
+- README: the Zenodo DOI badge (the concept DOI always points to the latest version).
+
 ## 0.1.1 — 2026-10-03
 
 - Zenodo DOI: the repository is archived on Zenodo; this release is the first one it records (same content as 0.1.0).
