@@ -1,0 +1,30 @@
+{
+  "name": "Español",
+  "start_line": "gatecall: perfil {profiles}, política de la empresa {policy}; {red} carpeta(s) roja(s) se quedan en este ordenador; las claves, los números de tarjeta, los IBAN, los números de identidad y las listas de direcciones o teléfonos se detienen antes de salir.",
+  "no_policy": "aún sin escribir (las reglas por defecto)",
+  "start_denied_route": "Esta sesión funciona con {what}, que el perfil {profile} no permite: se detendrá cada mensaje. Díselo a la persona y que abra Claude Code sin él.",
+  "start_local": "Esta sesión funciona con un modelo en este ordenador ({host}): las carpetas rojas están abiertas para él y nada sale.",
+  "block_prompt": "gatecall detuvo este mensaje antes de que saliera del ordenador: {found}.",
+  "block_tool": "gatecall detuvo este paso antes de que nada saliera del ordenador: {found}.",
+  "advice": "Quítalos o enmascáralos (bastan los cuatro últimos caracteres), o haz este trabajo con el modelo propio de la empresa en este ordenador (el perfil local-red de routecall).",
+  "red_path": "{path} está en una carpeta roja: su contenido se queda en este ordenador y lo lee la ventana roja, un modelo de este ordenador abierto con el perfil local-red de routecall.",
+  "denied_route": "Esta sesión funciona con {what}, que el perfil {profile} no permite.",
+  "denied_target": "{what} no está permitido por el perfil {profile}.",
+  "kimi": "El agente de Kimi trabaja solo en una carpeta de práctica, y {folder} no lo es: Kimi no tiene modo de solo lectura.",
+  "grok": "El agente de Grok trabaja solo sobre una copia limpia, y {folder} no lo es: el comando copy de gatecall hace una sin carpetas rojas ni archivos de claves.",
+  "agy": "agy nunca recibe un permiso para todo: valdría para cada sesión posterior de agy en este ordenador. Pon el texto dentro de la pregunta.",
+  "mark_by_person": "Solo una persona marca una carpeta de práctica: ejecuta ella misma el comando mark, en su propio terminal.",
+  "fail_closed": "gatecall no pudo comprobar esto, y la política de la empresa pide detenerse ante la duda. Inténtalo otra vez; si se repite, quien configuró la IA de la empresa revisa el registro de gatecall.",
+  "red_offline": "La ventana roja trabaja sin red, y {what} saldría de este ordenador. Haz este paso en una ventana normal, sin los archivos rojos.",
+  "kinds": {
+    "secret": "una clave o un token",
+    "card": "un número de tarjeta",
+    "iban": "una cuenta bancaria (IBAN)",
+    "national-id": "un número de identidad",
+    "email-batch": "una lista de direcciones de correo",
+    "phone-batch": "una lista de teléfonos"
+  },
+  "id_context": {
+    "es-dni": ["DNI", "NIE"]
+  }
+}

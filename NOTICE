@@ -1,0 +1,15 @@
+gatecall
+Copyright 2026 Vadym Chernets
+
+This product includes software developed by Vadym Chernets, as part of Poly A1.
+
+The kinds of personal data gatecall recognizes, and the check digits it uses for them, follow the
+recognizers of Presidio (MIT License, Copyright (c) Microsoft Corporation; now maintained at
+github.com/data-privacy-stack/presidio): payment cards with the Luhn check, IBANs with the ISO 13616
+mod-97 check, and national identification numbers with each country's own check digit. The shapes of
+API keys and tokens follow the public formats each vendor documents, as gitleaks (MIT License,
+github.com/gitleaks/gitleaks) lists them. No Presidio or gitleaks code is copied: the recognizers in
+skills/gatecall/scripts/detect.py are written anew in Python's standard library.
+
+Rules of the program profiles (kimi, grok, agy) come from the Poly A1 track for companies (its plan,
+section 0.6, step B13, and the council's late opinion opinions-late/meta-nb1.md:8).

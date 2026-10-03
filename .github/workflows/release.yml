@@ -1,0 +1,50 @@
+# Every `v*` tag becomes a GitHub release with `<plugin>-<version>.zip` attached - the file the
+# Poly A1 catalogue (github.com/vadimchernets/poly-a1-plugins) installs as an `archive` source,
+# with no git on the person's machine. The release is created complete, zip included, in one step,
+# so Zenodo (which archives every published release and mints its DOI) and the catalogue both see
+# the finished release. Run by hand with a tag to attach the zip to a release that lacks it.
+name: release
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag, e.g. v0.1.4"
+        required: true
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ inputs.tag || github.ref_name }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+      - name: Build the zip
+        run: sh scripts/release-zip.sh "$TAG"
+      - name: Publish the release with the zip
+        run: |
+          set -eu
+          zip=$(ls dist/*.zip)
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            # A published asset is never replaced: catalogues pin its sha256.
+            if gh release view "$TAG" --json assets --jq '.assets[].name' | grep -qx "$(basename "$zip")"; then
+              echo "$(basename "$zip") is already attached to $TAG - left as it is"
+            else
+              gh release upload "$TAG" "$zip" "$zip.sha256"
+            fi
+          else
+            version=${TAG#v}
+            if [ -f CHANGELOG.md ] && grep -q "^## $version\b" CHANGELOG.md; then
+              awk -v v="$version" '$0 ~ "^## "v"( |$)" {on=1; next} /^## / {on=0} on' CHANGELOG.md > notes.md
+              notes="--notes-file notes.md"
+            else
+              notes="--generate-notes"
+            fi
+            name=$(python3 -c "import json; print(json.load(open('.claude-plugin/plugin.json'))['name'])")
+            gh release create "$TAG" "$zip" "$zip.sha256" --title "$name $TAG" --verify-tag $notes
+          fi

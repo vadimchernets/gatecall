@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "company": "Example agency, 10 people",
+  "country": "ES",
+  "language": "es",
+  "profiles": [
+    "default",
+    "eu"
+  ],
+  "deny_jurisdictions": [],
+  "red_paths": [
+    "~/Company/Clients",
+    "~/Company/HR"
+  ],
+  "yellow_paths": [
+    "~/Company/Projects"
+  ],
+  "training_folders": [
+    "~/Company/Training"
+  ],
+  "copy_folders": [],
+  "markers": true,
+  "journal": true,
+  "fail_closed": false,
+  "max_usd_per_day": 40,
+  "max_usd_per_month": 600,
+  "allowed_providers": [],
+  "deny_providers": []
+}

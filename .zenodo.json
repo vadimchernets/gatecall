@@ -1,0 +1,20 @@
+{
+  "title": "gatecall: what may leave the company, and where it may go",
+  "description": "gatecall is a Claude Code plugin that keeps a company's data on its routes. Its hooks stop a message, a command, a web request or a tool call that carries an API key or token, a payment card number (Luhn-checked), an IBAN (ISO 13616 mod-97), a national ID number with its check digit, or a list of people's e-mail addresses or phone numbers, and say why in the person's language. Red folders are read only by a model on the company's own computer. Profiles cover any company, the EU and US defence contractors (no DeepSeek model, API or weights); program rules keep other AI agents (kimi, grok, agy) to training folders, cleaned copies and no blanket permissions. It writes a permissions.deny block with absolute paths and keeps a journal of kinds and fingerprints, never the values. Python standard library only, no network.",
+  "creators": [
+    {
+      "name": "Chernets, Vadym"
+    }
+  ],
+  "upload_type": "software",
+  "license": "apache-2.0",
+  "keywords": [
+    "claude-code-plugin",
+    "privacy",
+    "data-loss-prevention",
+    "pii",
+    "secrets",
+    "gdpr",
+    "for-companies"
+  ]
+}

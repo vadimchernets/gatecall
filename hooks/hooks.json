@@ -1,0 +1,40 @@
+{
+  "description": "gatecall's hooks. At session start, one line naming the company's profile and its red folders (and, when the session itself runs on a provider the profile forbids, that every message will be stopped). Before a message leaves: a key, a card number (Luhn), an IBAN (mod-97), an ID number with its check digit, or a list of addresses or phone numbers stops it, with the reason in the person's language. Before a step: the same for commands, web requests and tool calls; red folders are read only by a model on this computer; kimi works only in a training folder, grok only on a cleaned copy, agy never gets a permission for everything. Every hook goes through the step 0 guard: with no Python the session start says so in one line, and the others stay quiet.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "exec sh \"${CLAUDE_PLUGIN_ROOT}/hooks/python.sh\" gatecall say \"${CLAUDE_PLUGIN_ROOT}/skills/gatecall/scripts/gatecall.py\" hook start\ntrap { continue }; & ([scriptblock]::Create((Get-Content -Raw -LiteralPath \"${CLAUDE_PLUGIN_ROOT}/hooks/python.ps1\"))) gatecall say \"${CLAUDE_PLUGIN_ROOT}/skills/gatecall/scripts/gatecall.py\" hook start",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "exec sh \"${CLAUDE_PLUGIN_ROOT}/hooks/python.sh\" gatecall quiet \"${CLAUDE_PLUGIN_ROOT}/skills/gatecall/scripts/gatecall.py\" hook prompt\ntrap { continue }; & ([scriptblock]::Create((Get-Content -Raw -LiteralPath \"${CLAUDE_PLUGIN_ROOT}/hooks/python.ps1\"))) gatecall quiet \"${CLAUDE_PLUGIN_ROOT}/skills/gatecall/scripts/gatecall.py\" hook prompt",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Read|Edit|Write|MultiEdit|NotebookEdit|Grep|Glob|WebFetch|WebSearch|mcp__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "exec sh \"${CLAUDE_PLUGIN_ROOT}/hooks/python.sh\" gatecall quiet \"${CLAUDE_PLUGIN_ROOT}/skills/gatecall/scripts/gatecall.py\" hook tool\ntrap { continue }; & ([scriptblock]::Create((Get-Content -Raw -LiteralPath \"${CLAUDE_PLUGIN_ROOT}/hooks/python.ps1\"))) gatecall quiet \"${CLAUDE_PLUGIN_ROOT}/skills/gatecall/scripts/gatecall.py\" hook tool",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

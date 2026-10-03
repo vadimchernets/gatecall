@@ -1,0 +1,31 @@
+{
+  "name": "Português",
+  "start_line": "gatecall: perfil {profiles}, política da empresa {policy}; {red} pasta(s) vermelha(s) ficam neste computador; chaves, números de cartão, IBAN, números de identificação e listas de endereços ou telefones são parados antes de sair.",
+  "no_policy": "ainda não escrita (as regras padrão)",
+  "start_denied_route": "Esta sessão funciona com {what}, que o perfil {profile} não permite: cada mensagem será parada. Diga isso à pessoa e abra o Claude Code sem ele.",
+  "start_local": "Esta sessão funciona com um modelo neste computador ({host}): as pastas vermelhas estão abertas para ele e nada sai.",
+  "block_prompt": "O gatecall parou esta mensagem antes de ela sair do computador: {found}.",
+  "block_tool": "O gatecall parou este passo antes de qualquer coisa sair do computador: {found}.",
+  "advice": "Tire-os ou mascare-os (os quatro últimos caracteres bastam), ou faça este trabalho com o modelo próprio da empresa neste computador (o perfil local-red do routecall).",
+  "red_path": "{path} está numa pasta vermelha: o conteúdo fica neste computador e quem o lê é a janela vermelha, um modelo deste computador aberto com o perfil local-red do routecall.",
+  "denied_route": "Esta sessão funciona com {what}, que o perfil {profile} não permite.",
+  "denied_target": "{what} não é permitido pelo perfil {profile}.",
+  "kimi": "O agente do Kimi trabalha só numa pasta de treino com ficheiros de prática, e {folder} não é uma: o Kimi não tem modo só de leitura.",
+  "grok": "O agente do Grok trabalha só numa cópia limpa, e {folder} não é uma: o comando copy do gatecall faz uma sem pastas vermelhas nem ficheiros de chaves.",
+  "agy": "O agy nunca recebe uma permissão para tudo: valeria para cada sessão seguinte do agy neste computador. Ponha o texto dentro da pergunta.",
+  "mark_by_person": "Só uma pessoa marca uma pasta de treino: ela mesma executa o comando mark, no seu próprio terminal.",
+  "fail_closed": "O gatecall não conseguiu verificar isto, e a política da empresa pede para parar na dúvida. Tente outra vez; se repetir, quem configurou a IA da empresa consulta o registo do gatecall.",
+  "red_offline": "A janela vermelha trabalha sem rede, e {what} sairia deste computador. Faça este passo numa janela normal, sem os ficheiros vermelhos.",
+  "kinds": {
+    "secret": "uma chave ou um token",
+    "card": "um número de cartão",
+    "iban": "uma conta bancária (IBAN)",
+    "national-id": "um número de identificação",
+    "email-batch": "uma lista de endereços de e-mail",
+    "phone-batch": "uma lista de telefones"
+  },
+  "id_context": {
+    "pt-nif": ["NIF", "contribuinte"],
+    "br-cpf": ["CPF"]
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "about": "gatecall's profiles, programs and national ID numbers. A company names its profiles in company-ai-policy.json (\"profiles\": [\"default\", \"eu\"]); profiles add up: blocked kinds, denied models and denied hosts join, a list of addresses or phone numbers counts from the lowest threshold. Every 'why' names its source.",
+  "kinds": ["secret", "card", "iban", "national-id", "email-batch", "phone-batch"],
+  "profiles": {
+    "default": {
+      "about": "Any company: keys and tokens, payment cards, bank accounts, personal ID numbers and lists of people's e-mail addresses or phone numbers do not leave in a prompt, a command, a web request or a tool call, and red folders are read only by a model on this computer.",
+      "why": "The kinds a company is asked about first under card-network rules (PCI DSS), banking secrecy and data-protection law. The detectors check what can be checked - Luhn for cards, ISO 13616 mod-97 for IBANs, each country's own check digit for ID numbers - so a random number is not taken for one.",
+      "block": ["secret", "card", "iban", "national-id", "email-batch", "phone-batch"],
+      "email_batch": 5,
+      "phone_batch": 5,
+      "national_ids": "country",
+      "deny_models": [],
+      "deny_hosts": []
+    },
+    "eu": {
+      "extends": "default",
+      "about": "A company in the EU: the national ID numbers of every EU country gatecall knows are stopped, not only its own country's, and a list of contacts counts from three.",
+      "why": "GDPR article 87 leaves the conditions for processing a national identification number to each member state, so a number from any of them is treated as one to keep inside.",
+      "email_batch": 3,
+      "phone_batch": 3,
+      "national_ids": "eu"
+    },
+    "us-federal-contractor": {
+      "extends": "default",
+      "about": "A US defence contractor: no AI developed by DeepSeek - not its API, not its website, not its weights on an own machine. Covered defense information (a red folder of such a company) goes only to this computer's model or to a cloud that meets the FedRAMP Moderate baseline (DFARS 252.204-7012 (b)(2)(ii)(D), https://www.acquisition.gov/dfars/252.204-7012-safeguarding-covered-defense-information-and-cyber-incident-reporting, read 2026-10-02) - for example a GovCloud or GCC High tenant.",
+      "why": "FY2026 NDAA section 1532 (read 2026-10-02 in the Congressional Research Service summary https://www.congress.gov/crs-product/IF13197 and https://agora.eto.tech/instrument/2694): the Department of Defense and its contractors and subcontractors may not use covered AI - AI developed by DeepSeek, High Flyer or entities associated with High Flyer - in DoD contracts, unless the Secretary of Defense grants a case-by-case waiver. The weights on an own server are still DeepSeek's model, so a local run is stopped too.",
+      "deny_models": ["deepseek"],
+      "deny_hosts": ["deepseek.com", "z.ai", "bigmodel.cn"],
+      "hosts_why": "Zhipu's API (z.ai, bigmodel.cn) is closed too: Commerce added ten Zhipu entities to the Entity List on 2025-01-16 (Federal Register 2025-00704, https://www.federalregister.gov/documents/2025/01/16/2025-00704/addition-of-entities-to-and-revision-of-entry-on-the-entity-list), and a defence contractor keeps clear of paying a listed entity. GLM's open weights on an own machine stay allowed - no money and no data go to Zhipu (plan section 0.9)."
+    },
+    "us-dod-strict": {
+      "extends": "us-federal-contractor",
+      "about": "For a contract that extends the rule to every AI company of a covered nation: also no models of the Chinese vendors in the price table - by their API, their website or their weights.",
+      "why": "Section 1532 also bars the Department of Defense itself from using or acquiring AI from covered nations (China, Russia, Iran, North Korea) - CRS, https://www.congress.gov/crs-product/IF13197, read 2026-10-02. A contract can pass that wider rule on to its contractor; gatecall applies the wider list when the company names this profile.",
+      "deny_models": ["qwen", "qwq", "kimi", "moonshot", "glm", "chatglm", "zhipu", "minimax", "abab", "mimo", "doubao", "seed-", "hunyuan", "ernie", "baichuan"],
+      "deny_hosts": ["aliyuncs.com", "alibabacloud.com", "moonshot.cn", "moonshot.ai", "kimi.com", "kimi.ai", "bigmodel.cn", "z.ai", "minimax.io", "minimaxi.com", "mimo.mi.com", "volces.com", "byteplus.com", "baidubce.com", "siliconflow.cn", "siliconflow.com"]
+    }
+  },
+  "programs": {
+    "kimi": {
+      "rule": "training-only",
+      "about": "Kimi's command-line agent works only in a training folder (practice files), marked by a person or listed in the company policy.",
+      "why": "Kimi paid: practice files only, it has no read-only switch (opinions-late/meta-nb1.md:8, a late opinion of the plan's council; plan section 0.6, step B13)."
+    },
+    "grok": {
+      "rule": "copies-only",
+      "about": "Grok's command-line agent works only on a cleaned copy (gatecall's copy command), never on the company's own folder.",
+      "why": "Grok paid: a throwaway cleaned copy and a prepaid balance (opinions-late/meta-nb1.md:8; plan section 0.6, step B13)."
+    },
+    "agy": {
+      "rule": "no-blanket-allow",
+      "about": "Google's agy never gets a permission for everything; the text goes inside the question instead.",
+      "why": "agy reads a folder only after a blanket permission for all future runs; by default the text goes inside the question (opinions-late/meta-nb1.md:8; plan section 0.6, step B13)."
+    }
+  },
+  "national_ids": {
+    "us-ssn": {"country": "US", "name": "US Social Security number", "context": []},
+    "gb-nino": {"country": "GB", "name": "UK National Insurance number", "context": []},
+    "es-dni": {"country": "ES", "name": "Spanish DNI or NIE", "context": []},
+    "pt-nif": {"country": "PT", "name": "Portuguese NIF", "context": ["NIF", "contribuinte", "fiscal"]},
+    "br-cpf": {"country": "BR", "name": "Brazilian CPF", "context": []},
+    "fr-nir": {"country": "FR", "name": "French social security number (NIR)", "context": []},
+    "it-cf": {"country": "IT", "name": "Italian codice fiscale", "context": []},
+    "de-steuer-id": {"country": "DE", "name": "German tax ID (Steuer-IdNr)", "context": ["Steuer-ID", "Steuer-IdNr", "IdNr", "Steueridentifikationsnummer", "tax id"]},
+    "nl-bsn": {"country": "NL", "name": "Dutch BSN", "context": ["BSN", "burgerservicenummer"]},
+    "pl-pesel": {"country": "PL", "name": "Polish PESEL", "context": ["PESEL"]},
+    "ua-rnokpp": {"country": "UA", "name": "Ukrainian taxpayer number (RNOKPP)", "context": ["RNOKPP", "tax number", "taxpayer"]},
+    "ru-inn": {"country": "RU", "name": "Russian taxpayer number (INN)", "context": ["INN", "tax number", "taxpayer"]}
+  },
+  "eu_ids": ["es-dni", "pt-nif", "fr-nir", "it-cf", "de-steuer-id", "nl-bsn", "pl-pesel"],
+  "distinctive_ids": ["us-ssn", "gb-nino", "es-dni", "br-cpf", "fr-nir", "it-cf"],
+  "hosts_about": "Where each model API host processes data, for the company policy's deny_jurisdictions (hosts only: a model's weights on an own machine keep the data here) and deny_providers (the vendor's hosts and model names, matched like billcall's allowed_providers / deny_providers). The jurisdiction is the one billcall's price table gives for the vendor's API row, read on the vendor's own pricing or terms page on 2026-10-02; the most specific domain wins.",
+  "hosts": {
+    "anthropic.com": {"vendor": "Anthropic", "jurisdiction": "US", "models": ["claude"], "source": "https://platform.claude.com/docs/en/about-claude/pricing"},
+    "claude.ai": {"vendor": "Anthropic", "jurisdiction": "US", "models": [], "source": "https://claude.com/pricing"},
+    "openai.com": {"vendor": "OpenAI", "jurisdiction": "US", "models": ["gpt-", "o3", "o4"], "source": "https://developers.openai.com/api/docs/pricing"},
+    "googleapis.com": {"vendor": "Google", "jurisdiction": "US", "models": ["gemini", "gemma"], "source": "https://ai.google.dev/gemini-api/docs/pricing"},
+    "x.ai": {"vendor": "xAI", "jurisdiction": "US", "models": ["grok"], "source": "https://docs.x.ai/developers/pricing"},
+    "meta.ai": {"vendor": "Meta", "jurisdiction": "US", "models": ["llama", "muse"], "source": "https://dev.meta.ai/docs/pricing-rate-limits"},
+    "deepseek.com": {"vendor": "DeepSeek", "jurisdiction": "CN", "models": ["deepseek"], "source": "https://api-docs.deepseek.com/quick_start/pricing"},
+    "moonshot.ai": {"vendor": "Moonshot AI", "jurisdiction": "CN", "models": ["kimi", "moonshot"], "source": "https://platform.kimi.ai/docs/pricing/chat"},
+    "moonshot.cn": {"vendor": "Moonshot AI", "jurisdiction": "CN", "models": ["kimi", "moonshot"], "source": "https://platform.kimi.ai/docs/pricing/chat"},
+    "kimi.ai": {"vendor": "Moonshot AI", "jurisdiction": "CN", "models": ["kimi", "moonshot"], "source": "https://platform.kimi.ai/docs/pricing/chat"},
+    "kimi.com": {"vendor": "Moonshot AI", "jurisdiction": "CN", "models": ["kimi", "moonshot"], "source": "https://platform.kimi.ai/docs/pricing/chat"},
+    "aliyuncs.com": {"vendor": "Alibaba Cloud", "jurisdiction": "CN", "models": ["qwen", "qwq"], "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing"},
+    "dashscope-intl.aliyuncs.com": {"vendor": "Alibaba Cloud", "jurisdiction": "SG", "models": ["qwen", "qwq"], "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing"},
+    "alibabacloud.com": {"vendor": "Alibaba Cloud", "jurisdiction": "SG", "models": ["qwen", "qwq"], "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing"},
+    "z.ai": {"vendor": "Z.ai", "jurisdiction": "SG", "models": ["glm"], "source": "https://docs.z.ai/guides/overview/pricing"},
+    "bigmodel.cn": {"vendor": "Z.ai", "jurisdiction": "CN", "models": ["glm", "chatglm"], "source": "https://docs.z.ai/guides/overview/pricing"},
+    "minimax.io": {"vendor": "MiniMax", "jurisdiction": "CN", "models": ["minimax", "abab"], "source": "https://platform.minimax.io/docs/guides/pricing-paygo"},
+    "minimaxi.com": {"vendor": "MiniMax", "jurisdiction": "CN", "models": ["minimax", "abab"], "source": "https://platform.minimax.io/docs/guides/pricing-paygo"},
+    "mimo.mi.com": {"vendor": "Xiaomi", "jurisdiction": "CN", "models": ["mimo"], "source": "https://mimo.mi.com/docs/en-US/price/pay-as-you-go"},
+    "byteplus.com": {"vendor": "BytePlus", "jurisdiction": "SG", "models": ["seed-", "doubao"], "source": "https://docs.byteplus.com/en/docs/ModelArk/1099320"},
+    "volces.com": {"vendor": "BytePlus", "jurisdiction": "CN", "models": ["seed-", "doubao"], "source": "https://docs.byteplus.com/en/docs/ModelArk/1099320"},
+    "siliconflow.cn": {"vendor": "SiliconFlow", "jurisdiction": "CN", "models": [], "source": "https://www.siliconflow.com/pricing"},
+    "siliconflow.com": {"vendor": "SiliconFlow", "jurisdiction": "CN", "models": [], "source": "https://www.siliconflow.com/pricing"},
+    "fireworks.ai": {"vendor": "Fireworks", "jurisdiction": "US", "models": [], "source": "https://docs.fireworks.ai/serverless/pricing"},
+    "together.xyz": {"vendor": "Together AI", "jurisdiction": "US", "models": [], "source": "https://www.together.ai/pricing"},
+    "deepinfra.com": {"vendor": "DeepInfra", "jurisdiction": "US", "models": [], "source": "https://deepinfra.com/pricing"},
+    "groq.com": {"vendor": "Groq", "jurisdiction": "US", "models": [], "source": "https://groq.com/pricing"},
+    "openrouter.ai": {"vendor": "OpenRouter", "jurisdiction": "US", "models": [], "source": "https://openrouter.ai/docs/api-reference/limits"},
+    "mistral.ai": {"vendor": "Mistral AI", "jurisdiction": "FR", "models": ["mistral", "codestral", "magistral"], "source": "https://mistral.ai/pricing"}
+  }
+}

@@ -1,0 +1,21 @@
+# Changelog
+
+## 0.1.0 — 2026-10-02
+
+- First release: three hooks (session start, before a message, before a step), the skill, and the commands
+  `scan`, `settings`, `route`, `copy`, `mark`, `journal`, `profiles`.
+- Recognizers: keys and tokens of the main vendors, payment cards (Luhn), IBANs (ISO 13616 mod-97), twelve national
+  ID numbers with their check digits, lists of e-mail addresses and phone numbers.
+- Profiles `default`, `eu`, `us-federal-contractor`, `us-dod-strict`; program rules for kimi, grok and agy.
+- `deny_jurisdictions` and `deny_providers` in the company policy: a hosts table in `data/profiles.json` names
+  each model API host's vendor, country and source page; a denied country closes its hosts and keeps the same
+  vendor's hosts elsewhere open (dashscope-intl in Singapore inside aliyuncs.com); a denied vendor closes its hosts
+  and model names.
+- `us-federal-contractor` cites FY2026 NDAA section 1532 from the Congressional Research Service summary.
+- Messages in English, Spanish, Portuguese, Russian and Ukrainian.
+- The red window: red folders open only to a session on this computer that carries routecall's local-red mark
+  (`ROUTECALL_WINDOW=local-red`) with no Ollama cloud model behind the local address; in it no web tool and no
+  network program to an outside host runs. An ordinary local window keeps them shut.
+- `copy` masks keys, cards, IBANs, ID numbers and lists of people inside every file it copies (office documents
+  part by part), and leaves out what cannot be read as text, named with the reason. A card right after a CSV
+  field's comma is found.
