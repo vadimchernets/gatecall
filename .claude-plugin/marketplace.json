@@ -3,14 +3,14 @@
   "owner": { "name": "Vadym Chernets" },
   "metadata": {
     "description": "gatecall: keys, cards, IBANs, ID numbers and lists of people stopped before they leave; red folders read only by a model on this computer; profiles for any company, the EU and US defence contractors.",
-    "version": "0.1.0"
+    "version": "0.1.1"
   },
   "plugins": [
     {
       "name": "gatecall",
       "source": "./",
       "description": "Stops a message, a command or a tool call carrying a key, a card number, an IBAN, an ID number or a list of people, with the reason in the person's language; red folders stay with a model on this computer; kimi, grok and agy kept to their rules.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "author": { "name": "Vadym Chernets" },
       "license": "Apache-2.0",
       "keywords": ["privacy", "dlp", "pii", "secrets", "policy", "for-companies"],

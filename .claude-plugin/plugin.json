@@ -1,7 +1,7 @@
 {
   "name": "gatecall",
   "description": "What may leave the company, and where it may go. Its hooks stop a message, a command, a web request or a tool call that carries a key, a card number (Luhn-checked), an IBAN (mod-97), a national ID number with its check digit, or a list of people's addresses or phone numbers - with the reason in the person's language. Red folders are read only by a model on this computer; profiles for any company, the EU and US defence contractors (no DeepSeek); kimi only in a training folder, grok only on a cleaned copy, agy never with a permission for everything; a permissions.deny block with absolute //paths; a journal that keeps kinds and fingerprints, never the values.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": { "name": "Vadym Chernets" },
   "homepage": "https://github.com/vadimchernets/gatecall",
   "license": "Apache-2.0",

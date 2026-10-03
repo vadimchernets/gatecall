@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1 — 2026-10-03
+
+- Zenodo DOI: the repository is archived on Zenodo; this release is the first one it records (same content as 0.1.0).
+
 ## 0.1.0 — 2026-10-02
 
 - First release: three hooks (session start, before a message, before a step), the skill, and the commands
