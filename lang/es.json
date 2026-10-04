@@ -16,6 +16,8 @@
   "mark_by_person": "Solo una persona marca una carpeta de práctica: ejecuta ella misma el comando mark, en su propio terminal.",
   "fail_closed": "gatecall no pudo comprobar esto, y la política de la empresa pide detenerse ante la duda. Inténtalo otra vez; si se repite, quien configuró la IA de la empresa revisa el registro de gatecall.",
   "red_offline": "La ventana roja trabaja sin red, y {what} saldría de este ordenador. Haz este paso en una ventana normal, sin los archivos rojos.",
+  "own_file": "{path} pertenece al propio gatecall —su registro de detenciones y la clave del registro de la empresa— y solo gatecall lo abre. Para ver lo que se detuvo, ejecuta el comando journal de gatecall: muestra cada detención, sin los valores.",
+  "own_output": "gatecall quitó de esta salida la clave del registro de la empresa: solo gatecall la lee. El resto de la salida está tal como la dio el paso.",
   "kinds": {
     "secret": "una clave o un token",
     "card": "un número de tarjeta",

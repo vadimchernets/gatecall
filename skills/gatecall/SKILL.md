@@ -40,6 +40,9 @@ Ask, one at a time:
    there are closed, the same vendor's hosts elsewhere stay open, and open weights on this computer still run) or
    `deny_providers` (vendor names as in billcall's price table: their hosts and their model names are closed).
    Most companies leave both empty and route by the colour of the data instead.
+5. How long the journal of stops is kept (`journal_retention_days`, 90 days unless the company names another
+   number), and whether ID numbers go into it only as a count (`"journal_count_only": ["national-id"]`) rather than
+   as a fingerprint under the company's key.
 
 Write `company-ai-policy.json` in the company folder (the shape is in
 `${CLAUDE_PLUGIN_ROOT}/data/company-ai-policy.example.json`; firmcall installs the same file as managed settings for
@@ -105,4 +108,16 @@ sh "${CLAUDE_PLUGIN_ROOT}/hooks/python.sh" gatecall say skills/gatecall/scripts/
 sh "${CLAUDE_PLUGIN_ROOT}/hooks/python.sh" gatecall say skills/gatecall/scripts/gatecall.py journal --days 7
 ```
 
-The journal keeps the kind, the rule and a fingerprint — never the value itself.
+The journal holds no stopped value: each line is the time, the folder, the kinds and the rules, and each value is
+a fingerprint — HMAC-SHA256 under the company's own key (`journal.key`, readable by its owner only) — or, for the
+kinds in `journal_count_only`, only a count. The same value stopped twice shows as a repeat; without the key no
+fingerprint leads back to a number. Each record is kept by the policy of the folder it was written in (and by the
+`$COMPANY_AI_POLICY` of the session that wrote it), and deleted when that policy's `journal_retention_days` (90 by
+default) are over. Read the journal only through this command:
+gatecall stops any step that opens its journal or its key directly, and takes the key out of any output that
+reached it. For the company's security team, all kept records as a spreadsheet (or `--format jsonl`, one record a
+line):
+
+```
+sh "${CLAUDE_PLUGIN_ROOT}/hooks/python.sh" gatecall say skills/gatecall/scripts/gatecall.py journal --export "<file>.csv" --format csv
+```

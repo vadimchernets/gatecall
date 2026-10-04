@@ -17,6 +17,8 @@
     "mark_by_person": "why Claude may not mark a folder itself; who does it and how",
     "fail_closed": "shown when the guard itself failed and the company asked to stop rather than pass; calm, with the next step",
     "red_offline": "why a step is stopped in the red window, the one window that opens red folders: {what} would reach beyond this computer; calm, says where the step can be done",
+    "own_file": "why a step that opens gatecall's own journal or key is stopped, in any window; says how to see what was stopped instead; calm, a fact, not an accusation",
+    "own_output": "Claude reads it beside a step's output when gatecall took the company's journal key out of it; says the rest of the output is untouched, so Claude goes on with the work instead of hunting for the missing text; calm, a fact",
     "kinds": "short names of what was found, as a person says them",
     "id_context": "words of this language that stand next to a national ID number; they let gatecall tell an ID from any other number"
   },
@@ -36,6 +38,8 @@
   "mark_by_person": "Only a person marks a training folder: they run the mark command themselves, in their own terminal.",
   "fail_closed": "gatecall could not check this, and the company's policy asks to stop when unsure. Try once more; if it repeats, the one who set up the company's AI looks at gatecall's journal.",
   "red_offline": "The red window works without the network, and {what} would reach beyond this computer. Do this step in an ordinary window, without the red files.",
+  "own_file": "{path} belongs to gatecall itself - its journal of stops and the company's journal key - and only gatecall opens it. To see what was stopped, run gatecall's journal command: it shows every stop, without the values.",
+  "own_output": "gatecall took the company's journal key out of this output: only gatecall reads it. The rest of the output is as the step gave it.",
   "kinds": {
     "secret": "a key or a token",
     "card": "a card number",

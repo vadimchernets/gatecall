@@ -4,8 +4,11 @@ The red case and its green twin stand side by side, so a check that cannot fail 
 Keys and tokens are built at run time from pieces: no file of this repository holds a string a secret scanner
 would take for a real key.
 """
+import hashlib
+import hmac
 import importlib.util
 import json
+import os
 import unittest
 from pathlib import Path
 
@@ -33,7 +36,7 @@ class Cards(unittest.TestCase):
         self.assertEqual([f["kind"] for f in found], ["card"])
         self.assertTrue(found[0]["sample"].endswith("7899"))
         self.assertNotIn("4000001234567899", json.dumps(found))
-        self.assertEqual(len(found[0]["fingerprint"]), 12)
+        self.assertIsNone(found[0]["fingerprint"])              # no key given: no fingerprint at all
 
     def test_the_same_number_with_a_wrong_last_digit_is_not_a_card(self):
         self.assertEqual(kinds("pay it with 4000 0012 3456 7898 today"), [])
@@ -127,6 +130,86 @@ class NationalIds(unittest.TestCase):
 
     def test_only_the_kinds_asked_for_are_looked_for(self):
         self.assertEqual([f["kind"] for f in detect.scan("SSN 536-22-4170", ids=[], catalogue=CATALOGUE)], [])
+
+
+def sha256_0_1_3(value):
+    """The fingerprint of gatecall 0.1.0-0.1.3: sha256 without a key, its first 12 hex characters."""
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()[:12]
+
+
+class Fingerprints(unittest.TestCase):
+    """A fingerprint is HMAC-SHA256 under the company's key: the same value under the same key is the same
+    fingerprint (a repeat can be counted), and trying every number without the key finds nothing."""
+
+    def test_hmac_sha256_under_the_key_and_none_without_one(self):
+        key = bytes(range(32))
+        found = detect.scan("pay it with 4000 0012 3456 7899 today", key=key)
+        self.assertEqual(found[0]["fingerprint"],
+                         hmac.new(key, b"4000001234567899", hashlib.sha256).hexdigest()[:16])
+        self.assertEqual(detect.scan("again: 4000-0012-3456-7899", key=key)[0]["fingerprint"], found[0]["fingerprint"])
+        self.assertNotEqual(detect.scan("pay it with 4000 0012 3456 7899", key=bytes(range(1, 33)))[0]["fingerprint"],
+                            found[0]["fingerprint"])
+        self.assertIsNone(detect.fingerprint("4000001234567899", None))
+        self.assertIsNone(detect.fingerprint("4000001234567899", b""))
+
+    def test_the_key_is_asked_for_only_when_something_is_found(self):
+        asked = []
+
+        def key():
+            asked.append(1)
+            return b"k" * 32
+        self.assertEqual(detect.scan("plain words, order 1234567890123456789012345", key=key), [])
+        self.assertEqual(asked, [])
+        found = detect.scan("SSN 536-22-4170", ids=["us-ssn"], catalogue=CATALOGUE, key=key)
+        self.assertEqual(found[0]["fingerprint"], hmac.new(b"k" * 32, b"536224170", hashlib.sha256).hexdigest()[:16])
+        self.assertTrue(asked)
+
+    def test_one_id_number_written_two_ways_is_one_fingerprint(self):
+        """An ID number is fingerprinted without spaces, dots or dashes, in capitals: a repeat is counted however the
+        number was typed, and the company finds a stop with the number as its own records write it."""
+        key = bytes(range(32))
+        for kind, one, other, mark in (("es-dni", "DNI 12345678Z", "DNI 12345678-Z", b"12345678Z"),
+                                       ("br-cpf", "CPF 111.444.777-35", "CPF 11144477735", b"11144477735"),
+                                       ("gb-nino", "NI number AB123456C", "NI number AB 12 34 56 C", b"AB123456C"),
+                                       ("fr-nir", "NIR 1 85 05 78 006 084 91", "NIR 185057800608491",
+                                        b"185057800608491")):
+            marks = [f["fingerprint"] for text in (one, other)
+                     for f in detect.scan(text, ids=[kind], catalogue=CATALOGUE, key=key)]
+            self.assertEqual(marks, [hmac.new(key, mark, hashlib.sha256).hexdigest()[:16]] * 2, kind)
+
+    def test_a_list_is_fingerprinted_by_what_is_on_it_not_by_its_length(self):
+        """Two different lists of five addresses are two values; the same list in another order is one."""
+        key = bytes(range(32))
+        one = ["person%d@acme.test" % i for i in range(5)]
+        other = ["other%d@acme.test" % i for i in range(5)]
+
+        def mark(lines):
+            return [f["fingerprint"] for f in detect.scan("\n".join(lines), key=key)]
+        self.assertNotEqual(mark(one), mark(other))
+        self.assertEqual(mark(one), mark(list(reversed(one))))
+        self.assertEqual(mark(one), [hmac.new(key, "\n".join(sorted(one)).encode("utf-8"), hashlib.sha256).hexdigest()[:16]])
+        numbers = ["+44 20 7946 0958", "+1 (415) 555-0100", "+49 30 901820", "+380 44 123 4567", "+33 1 40 20 50 50"]
+        found = detect.scan("\n".join(numbers), key=key)
+        digits = sorted("".join(ch for ch in n if ch.isdigit()) for n in numbers)
+        self.assertEqual([f["fingerprint"] for f in found],
+                         [hmac.new(key, "\n".join(digits).encode("ascii"), hashlib.sha256).hexdigest()[:16]])
+        self.assertEqual(found[0]["sample"], "5 numbers")
+        self.assertNotEqual(detect.scan("\n".join(numbers[1:] + ["+44 20 7946 0959"]), key=key)[0]["fingerprint"],
+                            found[0]["fingerprint"])
+
+    def test_trying_every_number_finds_the_value_only_with_the_key(self):
+        """The 0.1.3 fingerprint gave an ID number back to anyone who tried every number of its range. Under the
+        company's key the same search finds nothing - with plain sha256 or with any other key - and the key's
+        holder can only check a guess, which is how the company matches a stop to a number it knows."""
+        ssn = "536-22-4170"
+        every = ["536-22-%04d" % n for n in range(10000)]
+        self.assertEqual([c for c in every if sha256_0_1_3(c) == sha256_0_1_3(ssn)], [ssn])     # the control
+        key = os.urandom(32)
+        mark = detect.scan("SSN %s" % ssn, ids=["us-ssn"], catalogue=CATALOGUE, key=key)[0]["fingerprint"]
+        self.assertEqual([c for c in every if hashlib.sha256(c.encode("utf-8")).hexdigest()[:16] == mark], [])
+        other = os.urandom(32)
+        self.assertEqual([c for c in every if detect.fingerprint(detect.id_mark(c), other) == mark], [])
+        self.assertEqual([c for c in every if detect.fingerprint(detect.id_mark(c), key) == mark], [ssn])
 
 
 if __name__ == "__main__":

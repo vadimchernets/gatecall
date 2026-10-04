@@ -21,6 +21,8 @@
   "copy_folders": [],
   "markers": true,
   "journal": true,
+  "journal_retention_days": 90,
+  "journal_count_only": ["national-id"],
   "fail_closed": false,
   "max_usd_per_day": 40,
   "max_usd_per_month": 600,

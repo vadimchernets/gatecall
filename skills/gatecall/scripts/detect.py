@@ -7,18 +7,32 @@ the Luhn digit of a payment card, the ISO 13616 mod-97 of an IBAN, each national
 digit. The shapes of keys and tokens are the public formats of each vendor, the way gitleaks (MIT) and
 Presidio (MIT, now github.com/data-privacy-stack/presidio) list them; the code here is written anew.
 
-A finding never carries the value itself: only its kind, a masked sample (the last four characters) and a
-short fingerprint (sha256), so the journal can count repeats without keeping what it counted.
+A finding never carries the value itself: only its kind, a masked sample (the last four characters) and, when the
+caller gives the company's key, a fingerprint - HMAC-SHA256 under that key - so the journal can count repeats
+without keeping what it counted. Without the key a fingerprint cannot be traced back to its value, not even by
+trying every possible number; with no key, no fingerprint is made at all. A value is fingerprinted the way it is
+read, so one value written two ways is one fingerprint: a card's digits, an IBAN without spaces, an ID number
+without spaces, dots or dashes in capitals, a key as written; a list of addresses or phone numbers is the list
+itself - its addresses in lower case, or its numbers' digits, sorted, one a line - so two different lists of the
+same length are two values, the same list in any order one.
 Standard library only.
 """
 import hashlib
+import hmac
 import re
 
 KINDS = ("secret", "card", "iban", "national-id", "email-batch", "phone-batch")
+FINGERPRINT_HEX = 16
 
 
-def fingerprint(value):
-    return hashlib.sha256(value.encode("utf-8")).hexdigest()[:12]
+def fingerprint(value, key):
+    """HMAC-SHA256 (RFC 2104) of a value under the company's own key, its first 16 hex characters; None without a
+    key. `key` is the key's bytes, or a function that gives them (or None) when the first fingerprint is needed."""
+    if callable(key):
+        key = key()
+    if not key:
+        return None
+    return hmac.new(key, value.encode("utf-8"), hashlib.sha256).hexdigest()[:FINGERPRINT_HEX]
 
 
 def mask(value, keep=4):
@@ -28,9 +42,10 @@ def mask(value, keep=4):
     return "*" * min(len(clean) - keep, 8) + clean[-keep:]
 
 
-def finding(kind, name, value, span, count=1):
-    return {"kind": kind, "name": name, "sample": mask(value), "fingerprint": fingerprint(value),
-            "span": [span[0], span[1]], "count": count}
+def finding(kind, name, value, span, count=1, key=None, mark=None):
+    """`mark`: what is fingerprinted, when it is not the value as found."""
+    return {"kind": kind, "name": name, "sample": mask(value),
+            "fingerprint": fingerprint(value if mark is None else mark, key), "span": [span[0], span[1]], "count": count}
 
 
 def overlaps(span, spans):
@@ -65,7 +80,7 @@ def luhn_ok(digits):
     return total % 10 == 0
 
 
-def cards(text, skip=(), pattern=CARD_RE):
+def cards(text, skip=(), pattern=CARD_RE, key=None):
     out = []
     for m in pattern.finditer(text):
         digits = re.sub(r"\D", "", m.group(0))
@@ -74,7 +89,7 @@ def cards(text, skip=(), pattern=CARD_RE):
         if overlaps(m.span(), skip):
             continue                        # the digits of an IBAN already found are not a card
         if luhn_ok(digits):
-            out.append(finding("card", "payment card", digits, m.span()))
+            out.append(finding("card", "payment card", digits, m.span(), key=key))
     return out
 
 
@@ -98,7 +113,7 @@ def iban_ok(value):
     return int(digits) % 97 == 1
 
 
-def ibans(text):
+def ibans(text, key=None):
     out = []
     for m in IBAN_RE.finditer(text):
         flat = m.group(0).replace(" ", "")
@@ -106,7 +121,7 @@ def ibans(text):
         for length in lengths:
             candidate = flat[:length]
             if len(candidate) == length and iban_ok(candidate):
-                out.append(finding("iban", "bank account (IBAN)", candidate, m.span()))
+                out.append(finding("iban", "bank account (IBAN)", candidate, m.span(), key=key))
                 break
     return out
 
@@ -131,7 +146,7 @@ SECRETS = (
 )
 
 
-def secrets(text):
+def secrets(text, key=None):
     out = []
     taken = []
     for name, pattern in SECRETS:
@@ -139,7 +154,7 @@ def secrets(text):
             if overlaps(m.span(), taken):
                 continue
             taken.append(m.span())
-            out.append(finding("secret", name, m.group(0), m.span()))
+            out.append(finding("secret", name, m.group(0), m.span(), key=key))
     return out
 
 
@@ -312,6 +327,12 @@ NATIONAL_IDS = {
 }
 
 
+def id_mark(value):
+    """An ID number as it is fingerprinted: without spaces, dots or dashes, in capitals - 12345678-Z and 12345678Z,
+    111.444.777-35 and 11144477735 are one number."""
+    return re.sub(r"[\s.\-]", "", value).upper()
+
+
 def has_context(text, span, words):
     if not words:
         return True
@@ -319,12 +340,12 @@ def has_context(text, span, words):
     return any(word.lower() in window for word in words)
 
 
-def national_ids(text, ids, catalogue, skip=()):
+def national_ids(text, ids, catalogue, skip=(), key=None):
     """ids: the ID kinds to look for; catalogue: data/profiles.json's national_ids (name, context words)."""
     out = []
-    for key in ids:
-        pattern, check = NATIONAL_IDS[key]
-        info = catalogue.get(key, {})
+    for kind in ids:
+        pattern, check = NATIONAL_IDS[kind]
+        info = catalogue.get(kind, {})
         for m in pattern.finditer(text):
             if overlaps(m.span(), skip) or not has_context(text, m.span(), info.get("context") or []):
                 continue
@@ -333,32 +354,34 @@ def national_ids(text, ids, catalogue, skip=()):
             except (ValueError, KeyError, IndexError):
                 ok = False
             if ok:
-                out.append(finding("national-id", info.get("name", key), m.group(0), m.span()))
+                out.append(finding("national-id", info.get("name", kind), m.group(0), m.span(), key=key,
+                                   mark=id_mark(m.group(0))))
     return out
 
 
 # ---------------------------------------------------------------- one text --------------------
 
-def scan(text, ids=(), catalogue=None, email_batch=5, phone_batch=5):
+def scan(text, ids=(), catalogue=None, email_batch=5, phone_batch=5, key=None):
     """Every finding in one text. A list of addresses or phone numbers counts from its threshold on:
-    one address in a letter is work, a column of them is a list of people."""
+    one address in a letter is work, a column of them is a list of people. `key`: the company's journal key (or
+    the function that gives it), for the findings' fingerprints; without it they carry none."""
     if not isinstance(text, str) or not text:
         return []
-    out = secrets(text) + ibans(text)
-    out.extend(cards(text, skip=[f["span"] for f in out]))
+    out = secrets(text, key) + ibans(text, key)
+    out.extend(cards(text, skip=[f["span"] for f in out], key=key))
     taken = [f["span"] for f in out]
-    out.extend(national_ids(text, ids, catalogue or {}, skip=taken))
+    out.extend(national_ids(text, ids, catalogue or {}, skip=taken, key=key))
     taken = [f["span"] for f in out]
     addresses = emails(text)
     if email_batch and len(addresses) >= email_batch:
         first = min(addresses.values())
         out.append(finding("email-batch", "a list of e-mail addresses", "%d addresses" % len(addresses), first,
-                           count=len(addresses)))
+                           count=len(addresses), key=key, mark="\n".join(sorted(addresses))))
         out[-1]["sample"] = "%d addresses" % len(addresses)
     numbers = phones(text, skip=taken + [list(s) for s in addresses.values()])
     if phone_batch and len(numbers) >= phone_batch:
         first = min(numbers.values())
         out.append(finding("phone-batch", "a list of phone numbers", "%d numbers" % len(numbers), first,
-                           count=len(numbers)))
+                           count=len(numbers), key=key, mark="\n".join(sorted(numbers))))
         out[-1]["sample"] = "%d numbers" % len(numbers)
     return out

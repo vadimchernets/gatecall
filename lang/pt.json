@@ -16,6 +16,8 @@
   "mark_by_person": "Só uma pessoa marca uma pasta de treino: ela mesma executa o comando mark, no seu próprio terminal.",
   "fail_closed": "O gatecall não conseguiu verificar isto, e a política da empresa pede para parar na dúvida. Tente outra vez; se repetir, quem configurou a IA da empresa consulta o registo do gatecall.",
   "red_offline": "A janela vermelha trabalha sem rede, e {what} sairia deste computador. Faça este passo numa janela normal, sem os ficheiros vermelhos.",
+  "own_file": "{path} pertence ao próprio gatecall — o registo de paragens e a chave do registo da empresa — e só o gatecall o abre. Para ver o que foi parado, execute o comando journal do gatecall: mostra cada paragem, sem os valores.",
+  "own_output": "O gatecall retirou desta saída a chave do registo da empresa: só o gatecall a lê. O resto da saída está como o passo a deu.",
   "kinds": {
     "secret": "uma chave ou um token",
     "card": "um número de cartão",
