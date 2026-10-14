@@ -1520,8 +1520,18 @@ def tool_text(tool, data):
     return json.dumps(data, ensure_ascii=False)
 
 
+def patch_files(data):
+    """The files a Codex `apply_patch` patch updates, deletes, adds or moves to (its text is tool_input.command)."""
+    text = data.get("command") or data.get("input") or data.get("patch") or ""
+    if isinstance(text, list):
+        text = "\n".join(str(x) for x in text)
+    return re.findall(r"^\*\*\* (?:Update File|Delete File|Add File|Move to): (.+?)\s*$", str(text), re.M)
+
+
 def tool_paths(tool, data, cwd):
     out = []
+    if tool == "apply_patch":
+        return [resolve_path(name, cwd) for name in patch_files(data)]
     if tool in FILE_TOOLS:
         for key in ("file_path", "notebook_path"):
             if isinstance(data.get(key), str) and data[key]:
