@@ -222,7 +222,7 @@ MUTATIONS = (
      'raise Problem("cannot read the journal %s: %s" % (name, exc.strerror or exc))', "continue",
      "tests/test_gatecall.py::Company::test_a_journal_that_cannot_be_read_is_said_so_never_shown_empty", "red"),
     ("the version differs between the manifest and the catalogue", PLUGIN_JSON,
-     '"version": "0.1.4"', '"version": "0.1.5"',
+     '"version": "0.1.5"', '"version": "0.1.6"',
      "tests/test_gatecall.py::Release", "red"),
 )
 

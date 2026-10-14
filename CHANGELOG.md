@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.5 — 2026-10-14
+
+- Hooks also fire on Codex `apply_patch`: the hook matcher includes it, and the file paths are read from the patch text, so an edit made through Codex is checked the same way as one made through Claude Code.
+
 ## 0.1.4 — 2026-10-03
 
 - Journal fingerprints are HMAC-SHA256 under the company's own key. In 0.1.0–0.1.3 they were sha256 without a
