@@ -1,0 +1,30 @@
+{
+  "name": "Deutsch",
+  "start_line": "gatecall: Profil {profiles}, Firmenrichtlinie {policy}; {red} rote(r) Ordner bleiben auf diesem Computer; Schlüssel, Kartennummern, IBANs, Ausweisnummern und Listen von Adressen oder Telefonnummern werden gestoppt, bevor sie ihn verlassen.",
+  "no_policy": "noch nicht geschrieben (die Standardregeln)",
+  "start_denied_route": "Diese Sitzung läuft auf {what}, was das Profil {profile} nicht erlaubt: Jede Nachricht wird gestoppt. Sag es der Person und starte Claude Code ohne das.",
+  "start_local": "Diese Sitzung läuft auf einem Modell auf diesem Computer ({host}): Rote Ordner sind für es offen, und nichts verlässt den Computer.",
+  "block_prompt": "gatecall hat diese Nachricht gestoppt, bevor sie den Computer verlassen hat: {found}.",
+  "block_tool": "gatecall hat diesen Schritt gestoppt, bevor etwas den Computer verlassen hat: {found}.",
+  "advice": "Nimm sie heraus oder maskiere sie (die letzten vier Zeichen genügen), oder erledige diese Arbeit mit dem eigenen Modell der Firma auf diesem Computer (das Profil local-red von routecall).",
+  "red_path": "{path} liegt in einem roten Ordner: Sein Inhalt bleibt auf diesem Computer, und das rote Fenster liest ihn – ein Modell auf diesem Computer, geöffnet mit dem Profil local-red von routecall.",
+  "denied_route": "Diese Sitzung läuft auf {what}, was das Profil {profile} nicht erlaubt.",
+  "denied_target": "{what} ist durch das Profil {profile} nicht erlaubt.",
+  "kimi": "Der Agent von Kimi arbeitet nur in einem Übungsordner mit Übungsdateien, und {folder} ist keiner: Kimi hat keinen Nur-Lesen-Schalter.",
+  "grok": "Der Agent von Grok arbeitet nur an einer bereinigten Kopie, und {folder} ist keine: Der Befehl copy von gatecall erstellt eine ohne rote Ordner und Schlüsseldateien.",
+  "agy": "agy bekommt nie eine Erlaubnis für alles: Sie würde für jede spätere agy-Sitzung auf diesem Computer gelten. Setze den Text stattdessen in die Frage.",
+  "mark_by_person": "Nur eine Person markiert einen Übungsordner: Sie führt den Befehl mark selbst in ihrem eigenen Terminal aus.",
+  "fail_closed": "gatecall konnte das nicht prüfen, und die Richtlinie der Firma verlangt, im Zweifel zu stoppen. Versuche es noch einmal; wenn es sich wiederholt, schaut derjenige, der die KI der Firma eingerichtet hat, ins Journal von gatecall.",
+  "red_offline": "Das rote Fenster arbeitet ohne Netz, und {what} würde diesen Computer verlassen. Erledige diesen Schritt in einem gewöhnlichen Fenster, ohne die roten Dateien.",
+  "own_file": "{path} gehört gatecall selbst – seinem Journal der Stopps und dem Journalschlüssel der Firma – und nur gatecall öffnet es. Um zu sehen, was gestoppt wurde, führe den Befehl journal von gatecall aus: Er zeigt jeden Stopp, ohne die Werte.",
+  "own_output": "gatecall hat den Journalschlüssel der Firma aus dieser Ausgabe entfernt: Nur gatecall liest ihn. Der Rest der Ausgabe ist so, wie der Schritt ihn geliefert hat.",
+  "kinds": {
+    "secret": "ein Schlüssel oder ein Token",
+    "card": "eine Kartennummer",
+    "iban": "ein Bankkonto (IBAN)",
+    "national-id": "eine Ausweisnummer",
+    "email-batch": "eine Liste von E-Mail-Adressen",
+    "phone-batch": "eine Liste von Telefonnummern"
+  },
+  "id_context": {}
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Français",
+  "start_line": "gatecall : profil {profiles}, politique de l'entreprise {policy} ; {red} dossier(s) rouge(s) restent sur cet ordinateur ; les clés, numéros de carte, IBAN, numéros d'identité et listes d'adresses ou de téléphones sont arrêtés avant de sortir.",
+  "no_policy": "pas encore rédigée (les règles par défaut)",
+  "start_denied_route": "Cette session fonctionne avec {what}, que le profil {profile} n'autorise pas : chaque message sera arrêté. Dis-le à la personne et lance Claude Code sans cela.",
+  "start_local": "Cette session fonctionne avec un modèle sur cet ordinateur ({host}) : les dossiers rouges lui sont ouverts, et rien ne sort.",
+  "block_prompt": "gatecall a arrêté ce message avant qu'il quitte l'ordinateur : {found}.",
+  "block_tool": "gatecall a arrêté cette étape avant que quoi que ce soit quitte l'ordinateur : {found}.",
+  "advice": "Retire-les ou masque-les (les quatre derniers caractères suffisent), ou fais ce travail avec le modèle propre à l'entreprise sur cet ordinateur (le profil local-red de routecall).",
+  "red_path": "{path} est dans un dossier rouge : son contenu reste sur cet ordinateur et c'est la fenêtre rouge qui le lit, un modèle de cet ordinateur ouvert avec le profil local-red de routecall.",
+  "denied_route": "Cette session fonctionne avec {what}, que le profil {profile} n'autorise pas.",
+  "denied_target": "{what} n'est pas autorisé par le profil {profile}.",
+  "kimi": "L'agent de Kimi ne travaille que dans un dossier d'entraînement de fichiers d'exercice, et {folder} n'en est pas un : Kimi n'a pas de mode lecture seule.",
+  "grok": "L'agent de Grok ne travaille que sur une copie nettoyée, et {folder} n'en est pas une : la commande copy de gatecall en fait une sans dossiers rouges ni fichiers de clés.",
+  "agy": "agy ne reçoit jamais une permission pour tout : elle vaudrait pour chaque session agy suivante sur cet ordinateur. Mets plutôt le texte dans la question.",
+  "mark_by_person": "Seule une personne marque un dossier d'entraînement : elle exécute elle-même la commande mark, dans son propre terminal.",
+  "fail_closed": "gatecall n'a pas pu vérifier cela, et la politique de l'entreprise demande de s'arrêter dans le doute. Réessaie ; si cela se répète, la personne qui a configuré l'IA de l'entreprise consulte le journal de gatecall.",
+  "red_offline": "La fenêtre rouge travaille sans réseau, et {what} sortirait de cet ordinateur. Fais cette étape dans une fenêtre ordinaire, sans les fichiers rouges.",
+  "own_file": "{path} appartient à gatecall lui-même – son journal des arrêts et la clé du journal de l'entreprise – et seul gatecall l'ouvre. Pour voir ce qui a été arrêté, lance la commande journal de gatecall : elle montre chaque arrêt, sans les valeurs.",
+  "own_output": "gatecall a retiré de cette sortie la clé du journal de l'entreprise : seul gatecall la lit. Le reste de la sortie est tel que l'étape l'a donné.",
+  "kinds": {
+    "secret": "une clé ou un jeton",
+    "card": "un numéro de carte",
+    "iban": "un compte bancaire (IBAN)",
+    "national-id": "un numéro d'identité",
+    "email-batch": "une liste d'adresses e-mail",
+    "phone-batch": "une liste de numéros de téléphone"
+  },
+  "id_context": {}
+}

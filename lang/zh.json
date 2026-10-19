@@ -1,0 +1,30 @@
+{
+  "name": "中文",
+  "start_line": "gatecall:配置 {profiles},公司策略 {policy};{red} 个红色文件夹留在这台电脑上;密钥、卡号、IBAN、身份证号以及地址或电话号码的列表会在离开前被拦下。",
+  "no_policy": "尚未编写(默认规则)",
+  "start_denied_route": "本次会话运行在 {what} 上,而配置 {profile} 不允许这样做:每条消息都会被拦下。请告诉对方,并在不使用它的情况下启动 Claude Code。",
+  "start_local": "本次会话运行在这台电脑上的模型({host})上:红色文件夹对它开放,什么都不会离开。",
+  "block_prompt": "gatecall 在这条消息离开电脑之前将其拦下:{found}。",
+  "block_tool": "gatecall 在任何内容离开电脑之前拦下了这一步:{found}。",
+  "advice": "请把它们去掉或遮盖(保留最后四个字符即可),或者在这台电脑上用公司自己的模型(routecall 的 local-red 配置)完成这项工作。",
+  "red_path": "{path} 位于红色文件夹中:其内容留在这台电脑上,由红色窗口读取,即用 routecall 的 local-red 配置打开的这台电脑上的模型。",
+  "denied_route": "本次会话运行在 {what} 上,而配置 {profile} 不允许这样做。",
+  "denied_target": "配置 {profile} 不允许 {what}。",
+  "kimi": "Kimi 的智能体只在存放练习文件的练习文件夹中工作,而 {folder} 不是:Kimi 没有只读开关。",
+  "grok": "Grok 的智能体只在清理过的副本上工作,而 {folder} 不是:gatecall 的 copy 命令可以生成一个不含红色文件夹和密钥文件的副本。",
+  "agy": "agy 永远不会获得对所有内容的权限:它会对这台电脑上之后的每一次 agy 会话都有效。请把文本放进问题里。",
+  "mark_by_person": "只有人才能标记练习文件夹:由本人在自己的终端中运行 mark 命令。",
+  "fail_closed": "gatecall 无法检查这一项,而公司策略要求不确定时停下。请再试一次;如果再次出现,由设置公司 AI 的人查看 gatecall 的日志。",
+  "red_offline": "红色窗口在无网络下工作,而 {what} 会离开这台电脑。请在不含红色文件的普通窗口中完成这一步。",
+  "own_file": "{path} 属于 gatecall 自己——它的拦截日志和公司的日志密钥——只有 gatecall 能打开。要查看被拦下的内容,请运行 gatecall 的 journal 命令:它会显示每一次拦截,但不含具体值。",
+  "own_output": "gatecall 已从此输出中去掉公司的日志密钥:只有 gatecall 能读取它。输出的其余部分与该步骤给出的一致。",
+  "kinds": {
+    "secret": "密钥或令牌",
+    "card": "卡号",
+    "iban": "银行账户(IBAN)",
+    "national-id": "身份证号",
+    "email-batch": "电子邮件地址列表",
+    "phone-batch": "电话号码列表"
+  },
+  "id_context": {}
+}
