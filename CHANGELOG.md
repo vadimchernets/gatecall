@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.6 — 2026-10-19
+
+- Interface text in eleven languages (de, fr, hi, ja, ko, zh added next to en, es, pt, ru, uk): `lang/<code>.json` for every language of the app.
+
 ## 0.1.5 — 2026-10-14
 
 - Hooks also fire on Codex `apply_patch`: the hook matcher includes it, and the file paths are read from the patch text, so an edit made through Codex is checked the same way as one made through Claude Code.
