@@ -1,5 +1,7 @@
 # gatecall
 
+> Poly helped? [Give it a star on GitHub](https://github.com/vadimchernets/gatecall) - one click. The plugin is open to everyone either way.
+
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23116724.svg)](https://doi.org/10.5281/zenodo.23116724)
 
 What may leave the company, and where it may go. A [Claude Code](https://claude.com/claude-code) plugin of
